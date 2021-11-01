@@ -11,17 +11,6 @@ module.exports.isLoggedIn = (req, res, next) => {
     return res.redirect('/login')
 }
 
-module.exports.validateCampground = (req, res, next) => {
-    const { error } = campgroundSchema.validate(req.body);
-    if (error) {
-        console.dir(error.details);
-        const msg = error.details.map(el => el.message).join(',');
-        throw new ExpressError(msg, 400);
-    } else {
-        next();
-    }
-}
-
 module.exports.isAuthor = async (req, res, next) => {
     const { id } = req.params;
     const campground = await Campground.findById(id);
@@ -42,7 +31,16 @@ module.exports.isReviewAuthor = async (req, res, next) => {
     next();
 }
 
-
+module.exports.validateCampground = (req, res, next) => {
+    const { error } = campgroundSchema.validate(req.body);
+    if (error) {
+        console.dir(error.details);
+        const msg = error.details.map(el => el.message).join(',');
+        throw new ExpressError(msg, 400);
+    } else {
+        next();
+    }
+}
 
 module.exports.validateReview = (req, res, next) => {
     const { error } = reviewSchema.validate(req.body);
